@@ -19,7 +19,7 @@ struct Point
 {
     int posX, posY;
 
-    Point(int x, int y)
+    Point(int x = 0, int y = 0)
     {
         this->posX = x;
         this->posY = y;
@@ -34,6 +34,14 @@ struct Point
     {
         this->posX = x;
         this->posY = y;
+    }
+
+    friend bool operator<(const Point &a, const Point &b)
+    {
+        if ((a.posX < b.posX) && (a.posY < b.posY))
+            return true;
+
+        return false;
     }
 };
 
@@ -56,25 +64,32 @@ constexpr inline T Clamp01(T val, T min, T max)
 
 float distance(Point src, Point dst)
 {
-    if (src.posX >= dst.posY)
-        return sqrt(pow((dst.posX - src.posX), 2) + pow((dst.posY - src.posY), 2));
-    else 
-        return sqrt(pow((src.posX - dst.posX), 2) + pow((src.posY - dst.posY), 2));
+    return sqrt(pow((dst.posX - src.posX), 2) + pow((dst.posY - src.posY), 2));
 }
 
 void drawLine(Point src, Point dst)
 {
-    while ((src.posX != dst.posX - 1) && (src.posY != dst.posY - 1)) 
+    while ((src.posX != dst.posX) && (src.posY != dst.posY)) 
     {
         float h = distance(src, dst);
         float x = round((dst.posX - src.posX) / h); 
         float y = round((dst.posY - src.posY) / h);
         
-        // if (src.posX != dst.posX)
-        src.posX += x;
+        if (src.posX != dst.posX)
+        {
+            if (src.posX > dst.posY)
+                src.posX -= x;
+            else
+                src.posX += x;
+        }
 
-        // if (src.posY != dst.posY)
-        src.posY += y;
+        if (src.posY != dst.posY)
+        {
+            if (src.posY > dst.posY)
+                src.posY -= y;
+            else 
+                src.posY += y;
+        }
 
         grid[src.posX][src.posY] = '-';
         // printf("X: %f | Y: %f | H: %f\n", x, y, h);
@@ -121,20 +136,30 @@ int main()
         static int r = 0;
 
         float rad = (float)((r * PI) / 180);
-        int bx = round((sin(rad) * 4) + a.posX);
-        int by = round((cos(rad) * 4) + a.posY);
+        int bx = round((cos(rad) * 6) + a.posX);
+        int by = round((sin(rad) * 6) + a.posY);
 
         b.move(bx, by);
 
         r += 10;
 
         printf("R: %d | Rad: %f | Sin: %f | X: %d | Y: %d\n", r, rad, sin(rad), bx, by);
+        printf("Distance from A to B: %f\n", distance(a, b));
 
         a.draw();
         b.draw();
 
-        drawLine(a, b);
+        // drawLine(a, b);
         // drawTriangle(a, b);
+        if (a.posX > b.posX)
+            printf("A is in front of B\n");
+        else
+            printf("A is behind of B\n");
+
+        if (a.posY > b.posY)
+            printf("A is below B\n");
+        else
+            printf("A is above B\n");
 
         render();
 

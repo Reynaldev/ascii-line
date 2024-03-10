@@ -1,1 +1,4 @@
-line.*
+*.exe
+*.out
+
+.vscode
