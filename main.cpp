@@ -98,11 +98,30 @@ void drawLine(Point src, Point dst)
 
 void drawTriangle(Point src, Point dst)
 {
-    for (int yl = src.posY + 1; yl != dst.posY; yl++)
-        grid[yl][src.posX] = '|';
+    // for (int yl = src.posY + 1; yl != dst.posY; yl++)
+    //     grid[yl][src.posX] = '|';
 
-    for (int xl = src.posX; xl != dst.posX; xl++)
-        grid[dst.posY][xl] = '-';
+    if (src.posX != dst.posX)
+    {
+        const int offset = (src.posX < dst.posX) ? 1 : -1;
+        int xl = src.posX + offset;
+        while (xl != dst.posX)
+        {
+            grid[src.posY][xl] = '-';
+            xl += offset;
+        }
+    }
+
+    if (src.posY != dst.posY)
+    {
+        const int offset = (src.posY < dst.posY) ? 1 : -1;
+        int yl = src.posY + offset;
+        while (yl != dst.posY)
+        {
+            grid[yl][dst.posX] = '|';
+            yl += offset;
+        }
+    }
 }
 
 void render()
@@ -144,13 +163,14 @@ int main()
         r += 10;
 
         printf("R: %d | Rad: %f | Sin: %f | X: %d | Y: %d\n", r, rad, sin(rad), bx, by);
-        printf("Distance from A to B: %f\n", distance(a, b));
+        printf("B =\n\tX: %d | Y: %d\n", b.posX, b.posY);
+        printf("Distance from A to B:\n\tX: %d | Y: %d | H: %f\n", abs(b.posX - a.posX), abs(b.posY - a.posY), distance(a, b));
 
         a.draw();
         b.draw();
 
         // drawLine(a, b);
-        // drawTriangle(a, b);
+        drawTriangle(a, b);
         if (a.posX > b.posX)
             printf("A is in front of B\n");
         else
