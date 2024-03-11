@@ -99,13 +99,22 @@ void render()
 
 int main(int argc, char **argv)
 {
+    bool showStat = false;
+    if (argc == 2)
+    {
+        const char arg = **(argv + 1);
+
+        if (arg == 's')
+            showStat = true;
+    }
+
     memset(grid, ' ', sizeof(grid));
 
     Point a(8, 8);
     Point b(8, 8);
 
     clock_t t = clock();
-    while (false)
+    while (true)
     {
         int d = clock() - t;
 
@@ -124,25 +133,28 @@ int main(int argc, char **argv)
 
         r += 10;
 
-        printf("R: %d | Rad: %f | Sin: %f | X: %d | Y: %d\n", r, rad, sin(rad), bx, by);
-        printf("B =\n\tX: %d | Y: %d\n", b.posX, b.posY);
-        printf("Distance from A to B:\n\tX: %d | Y: %d | H: %f\n", abs(b.posX - a.posX), abs(b.posY - a.posY), distance(a, b));
+        if (showStat)
+        {
+            printf("R: %d | Rad: %f | Sin: %f | X: %d | Y: %d\n", r, rad, sin(rad), bx, by);
+            printf("B =\n\tX: %d | Y: %d\n", b.posX, b.posY);
+            printf("Distance from A to B:\n\tX: %d | Y: %d | H: %f\n", abs(b.posX - a.posX), abs(b.posY - a.posY), distance(a, b));
+
+            if (a.posX > b.posX)
+                printf("A is in front of B\n");
+            else
+                printf("A is behind of B\n");
+
+            if (a.posY > b.posY)
+                printf("A is below B\n");
+            else
+                printf("A is above B\n");
+        }
 
         a.draw();
         b.draw();
 
         // drawLine(a, b);
         drawTriangle(a, b);
-
-        if (a.posX > b.posX)
-            printf("A is in front of B\n");
-        else
-            printf("A is behind of B\n");
-
-        if (a.posY > b.posY)
-            printf("A is below B\n");
-        else
-            printf("A is above B\n");
 
         render();
 
