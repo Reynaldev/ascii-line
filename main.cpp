@@ -69,37 +69,25 @@ float distance(Point src, Point dst)
 
 void drawLine(Point src, Point dst)
 {
-    while ((src.posX != dst.posX) && (src.posY != dst.posY)) 
+    float h = distance(src, dst);
+    while (h > 2.0f) 
     {
-        float h = distance(src, dst);
         float x = round((dst.posX - src.posX) / h); 
         float y = round((dst.posY - src.posY) / h);
-        
-        if (src.posX != dst.posX)
-        {
-            if (src.posX > dst.posY)
-                src.posX -= x;
-            else
-                src.posX += x;
-        }
 
-        if (src.posY != dst.posY)
-        {
-            if (src.posY > dst.posY)
-                src.posY -= y;
-            else 
-                src.posY += y;
-        }
+        src.posX += x;
+        src.posY += y;
 
-        grid[src.posX][src.posY] = '-';
-        // printf("X: %f | Y: %f | H: %f\n", x, y, h);
+        grid[src.posY][src.posX] = '+';
+
+        h = distance(src, dst);
     }
 }
 
 void drawTriangle(Point src, Point dst)
 {
-    // for (int yl = src.posY + 1; yl != dst.posY; yl++)
-    //     grid[yl][src.posX] = '|';
+    if ((src.posX != dst.posX) || (src.posY != dst.posY))
+        drawLine(src, dst);
 
     if (src.posX != dst.posX)
     {
