@@ -10,7 +10,6 @@
 #endif
 
 #define PI 3.14
-
 #define GRID_W 16
 
 char grid[GRID_W][GRID_W];
@@ -35,32 +34,7 @@ struct Point
         this->posX = x;
         this->posY = y;
     }
-
-    friend bool operator<(const Point &a, const Point &b)
-    {
-        if ((a.posX < b.posX) && (a.posY < b.posY))
-            return true;
-
-        return false;
-    }
 };
-
-template <typename T>
-constexpr int ArrLength(T &arr) { return sizeof(arr) / sizeof(*arr); }
-
-template <typename T>
-constexpr inline T Clamp01(T val, T min, T max)
-{
-    if (val > max)
-        return val = (T)1;
-
-    if (val < min)
-        return val = (T)0;
-
-    val = ((val - min) / (max - min));
-
-    return val;
-}
 
 float distance(Point src, Point dst)
 {
@@ -123,7 +97,7 @@ void render()
     }
 }
 
-int main()
+int main(int argc, char **argv)
 {
     memset(grid, ' ', sizeof(grid));
 
@@ -131,7 +105,7 @@ int main()
     Point b(8, 8);
 
     clock_t t = clock();
-    while (true)
+    while (false)
     {
         int d = clock() - t;
 
@@ -159,6 +133,7 @@ int main()
 
         // drawLine(a, b);
         drawTriangle(a, b);
+
         if (a.posX > b.posX)
             printf("A is in front of B\n");
         else
